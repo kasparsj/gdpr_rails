@@ -98,12 +98,12 @@ module PolicyManager::Concerns::UserBehavior
     end
   end
 
-  def needs_policy_confirmation_for?(rule)
+  def needs_policy_confirmation_for?(rule, check_rejected = true)
     term = policy_term_on(rule)
     user_term = policy_user_term_on(term)
     return true if user_term.blank?
-    return true if user_term.rejected?
-    term.created_at > user_term.created_at
+    return true if term.created_at > user_term.created_at
+    check_rejected && user_term.rejected?
   end
 
   def policy_term_on(rule)
